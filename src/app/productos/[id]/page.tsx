@@ -1,11 +1,9 @@
 import { Product } from "@/app/types/product";
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-// Prehook de build: le dice a Next.js qué IDs debe pre-generar
-//server component
 export async function generateStaticParams() {
   const response = await fetch('https://fakestoreapi.com/products');
   const products: Product[] = await response.json();
@@ -16,7 +14,7 @@ export async function generateStaticParams() {
 }
 
 export default async function ProductoDetallePage({ params }: Props) {
-  const { id } = params;
+  const { id } = await params; // esperar la promesa
 
   const response = await fetch(`https://fakestoreapi.com/products/${id}`);
   const product: Product = await response.json();
